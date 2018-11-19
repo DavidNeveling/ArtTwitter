@@ -1,12 +1,7 @@
 # coding: cp437
 
-from PIL import Image, ImageColor, ImageDraw
+from PIL import Image
 import re, random, math
-# from post import t, t_upload # left unincluded because I don't want to give out my personal info
-
-grid = []
-left = 0
-right = 0
 
 def main():
     draw()
@@ -101,12 +96,11 @@ def draw():
     width, height = 400, 400
     left, right = -scale, scale
     img = Image.new('RGBA', (width, height))
-    draw = ImageDraw.Draw(img)
 
     color1 = (255, 150, 255)
     color2 = (0, 100, 200)
-
     equation = genEquation()
+    # equation = ''
     print equation
     for i in range(width):
         mappedI = mapValue(i, 0, width, left, right)
@@ -116,6 +110,9 @@ def draw():
         # print y
         for j in range(height):
             match = mapValue(y, left, right, height, 0)
+            if match == float('inf') or match == -float('inf'): # not sure what else to do in this case
+                match = 1000000
+            # print match
             point = 255 - abs(j - int(match))
             if match >= 0 and match < height:
                 percent = mapValue(point, 0, 255, 0, 1)
