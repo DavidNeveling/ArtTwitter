@@ -8,42 +8,8 @@ grid = []
 left = 0
 right = 0
 
-
 def main():
-    # print genEquation()
-    # print makeEquation(1, 'S+S+CC')
     draw()
-
-    """ # THIS WORKS (and it doesn't require the ImageDraw module)
-    for r in range(400):
-        color = lerpColor(color1, color2, (1.0/400)*r)
-        for c in range(400):
-            img.putpixel((c, r), color)
-    """
-
-    """ # GLITCHY
-    for i in range(401):
-        color = lerpColor(color1, color2, (1.0/400)*i)
-        print color
-        print 10*i
-        draw.rectangle((0, i, 400, 1), color)
-    """
-
-    """ # GLITCHY
-    color = lerpColor(color1, color2, 0)
-    print color
-    draw.rectangle((0, 0, 400, 100), fill=color)
-    color = lerpColor(color1, color2, .33)
-    print color
-    draw.rectangle((0, 100, 400, 100), fill=color)
-    color = lerpColor(color1, color2, .67)
-    print color
-    draw.rectangle((0, 200, 400, 100), fill=color)
-    color = lerpColor(color1, color2, 1)
-    print color
-    draw.rectangle((0, 300, 400, 100), fill=(100, 128, 255))
-    del draw
-    """
 
 def makeEquation(x, equation):
     y = 0
@@ -53,10 +19,8 @@ def makeEquation(x, equation):
         check = equation[index].isalpha()
         index += 1
     index -= 1
-    equation = equation[index];
-
+    equation = equation[index:]
     segs = re.split(r'[+-]', equation)
-
     ops = re.split(r'[^+-]+', equation)
     try:
         while(segs.remove("")):
@@ -69,15 +33,26 @@ def makeEquation(x, equation):
         temp = x
         j = len(segs[i])-1
         while j >= 0:
+            # print temp
             segPart = segs[i][j]
             if segPart == 'X':
                 temp *= x
             elif segPart == 'S':
-                temp = math.sin(temp)
+                # print 'sin'
+                try:
+                    temp = math.sin(temp)
+                except:
+                    temp = float('inf')
             elif segPart == 'C':
-                temp = math.cos(temp)
+                try:
+                    temp = math.cos(temp)
+                except:
+                    temp = float('inf')
             elif segPart == 'T':
-                temp = math.tan(temp)
+                try:
+                    temp = math.tan(temp)
+                except:
+                    temp = float('inf')
             elif segPart == 'K':
                 try:
                     temp = 1 / math.sin(temp)
@@ -109,7 +84,6 @@ def genEquation():
     length = int(random.gauss(6, 3))
     possible = "SCTXKEO+-"
     result = ""
-
     for i in range(length):
         index = int(random.randrange(0, len(possible)))
         result += possible[index]
@@ -132,9 +106,8 @@ def draw():
     color1 = (255, 150, 255)
     color2 = (0, 100, 200)
 
-    # equation = genEquation()
-    equation = 'S'
-    # print equation
+    equation = genEquation()
+    print equation
     for i in range(width):
         mappedI = mapValue(i, 0, width, left, right)
         # print 'mappedI = ' + str(mappedI)
@@ -148,6 +121,8 @@ def draw():
                 percent = mapValue(point, 0, 255, 0, 1)
                 # print 'percent = ' + str(percent)
                 img.putpixel((i, j), lerpColor(color1, color2, percent))
+            else:
+                img.putpixel((i, j), color2)
     img.save('dickbutt.png')
 
 def mapValue(value, left1, right1, left2, right2):
