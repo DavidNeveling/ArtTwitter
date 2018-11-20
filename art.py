@@ -109,7 +109,7 @@ def draw():
     color1 = colorTuple[1]
     color2 = colorTuple[0]
     equation = genEquation()
-    # equation = ''
+    # equation = '+KESEOXK'
     print equation
     for i in range(width):
         mappedI = mapValue(i, 0, width, left, right)
@@ -119,16 +119,16 @@ def draw():
         # print y
         for j in range(height):
             match = mapValue(y, left, right, height, 0)
-            if match == float('inf') or match == -float('inf'): # not sure what else to do in this case
+            try:
+                match = int(match)
+            except:
                 match = 1000000
-            # print match
             point = 255 - abs(j - int(match))
             if match >= 0 and match < height:
                 percent = mapValue(point, 0, 255, 0, 1)
-                # print 'percent = ' + str(percent)
                 img.putpixel((i, j), lerpColor(color1, color2, percent))
             else:
-                img.putpixel((i, j), color2)
+                img.putpixel((i, j), color1)
     img.save('dickbutt.png')
 
 def mapValue(value, left1, right1, left2, right2):
