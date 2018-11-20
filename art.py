@@ -1,8 +1,8 @@
 # coding: cp437
 
 from PIL import Image
-import re, random, math
-
+import re, random, math, requests, json
+from operator import add, itemgetter
 def main():
     draw()
 
@@ -91,14 +91,23 @@ def genEquation():
         result += possible[int(random.randrange(0, 6))]
     return result
 
+def getColors():
+    data = '{"model":"default"}'
+    r = requests.post('http://colormind.io/api/', data=data)
+    data = r.json()['result']
+    extraData = [(v, reduce(add, data[data.index(v)])) for v in data]
+    extraData.sort(key=itemgetter(1), reverse = True)
+    return (tuple(extraData[3][0]), tuple(extraData[1][0]))
+
 def draw():
+    colorTuple = getColors()
     scale = 4
     width, height = 400, 400
     left, right = -scale, scale
     img = Image.new('RGBA', (width, height))
 
-    color1 = (255, 150, 255)
-    color2 = (0, 100, 200)
+    color1 = colorTuple[1]
+    color2 = colorTuple[0]
     equation = genEquation()
     # equation = ''
     print equation
