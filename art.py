@@ -102,14 +102,16 @@ def getColors():
 def draw():
     colorTuple = getColors()
     scale = 4
-    width, height = 400, 400
+    size = 4000
+    width, height = size, size
+    distance = int(size * .6375)
     left, right = -scale, scale
     img = Image.new('RGBA', (width, height))
 
     color1 = colorTuple[1]
     color2 = colorTuple[0]
     equation = genEquation()
-    # equation = '+KESEOXK'
+    # equation = ''
     print equation
     for i in range(width):
         mappedI = mapValue(i, 0, width, left, right)
@@ -123,9 +125,9 @@ def draw():
                 match = int(match)
             except:
                 match = 1000000
-            point = 255 - abs(j - int(match))
+            point = distance - abs(j - int(match))
             if match >= 0 and match < height:
-                percent = mapValue(point, 0, 255, 0, 1)
+                percent = mapValue(point, 0, distance, 0, 1)
                 img.putpixel((i, j), lerpColor(color1, color2, percent))
             else:
                 img.putpixel((i, j), color1)
