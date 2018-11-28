@@ -99,26 +99,25 @@ def getColors():
     extraData.sort(key=itemgetter(1), reverse = True)
     return (tuple(extraData[3][0]), tuple(extraData[1][0]))
 
-def draw():
+def draw(scale=4, size=4000, left=None, right=None, rotate=False):
     colorTuple = getColors()
     scale = 4
     size = 4000
     width, height = size, size
     distance = int(size * .6375)
-    left, right = -scale, scale
+    if left == None:
+        left = -scale
+    if right == None:
+        right = scale
     img = Image.new('RGBA', (width, height))
 
     color1 = colorTuple[1]
     color2 = colorTuple[0]
     equation = genEquation()
-    # equation = ''
     print equation
     for i in range(width):
         mappedI = mapValue(i, 0, width, left, right)
-        # print 'mappedI = ' + str(mappedI)
         y = makeEquation(mappedI, equation)
-        # print 'f(%f) = ' % i,
-        # print y
         for j in range(height):
             match = mapValue(y, left, right, height, 0)
             try:
@@ -131,6 +130,8 @@ def draw():
                 img.putpixel((i, j), lerpColor(color1, color2, percent))
             else:
                 img.putpixel((i, j), color1)
+    if rotate:
+        img.rotate(90)
     img.save('dickbutt.png')
 
 def mapValue(value, left1, right1, left2, right2):
