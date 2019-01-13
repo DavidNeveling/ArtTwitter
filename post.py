@@ -20,7 +20,7 @@ def main():
 
     draw()
     while True:
-        with open("dickbutt.png", "rb") as imagefile:
+        with open("image.png", "rb") as imagefile:
             imagedata = imagefile.read()
         id_img1 = t_upload.media.upload(media=imagedata)["media_id_string"]
         t.statuses.update(status="", media_ids=",".join([id_img1]))
